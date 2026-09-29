@@ -61,7 +61,16 @@ helm repo update
 helm --namespace monitoring install grafana grafana-community/grafana -f values.yaml
 ```
 
-### Port Forwarding
+### Add Internet Access
+
+#### IngressRoute
+
+```bash
+kubectl apply -f ingressroute.yaml
+kubectl delete -f ingressroute.yaml
+```
+
+#### Port Forwarding - Testing
 
 ```bash
 kubectl port-forward --namespace monitoring --address 0.0.0.0 $(kubectl get pod --namespace monitoring --selector "app.kubernetes.io/instance=grafana" --output=name) 3000:3000

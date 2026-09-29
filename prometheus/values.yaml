@@ -739,12 +739,12 @@ server:
   #   - name: edns0
 
   ## Security context to be added to server pods
-  ##
-  # securityContext:
-  #   runAsUser: 65534
-  #   runAsNonRoot: true
-  #   runAsGroup: 65534
-  #   fsGroup: 65534
+  #
+  securityContext:
+    runAsUser: 65534
+    runAsNonRoot: true
+    runAsGroup: 65534
+    fsGroup: 65534
 
   ## Security context to be added to server container
   ##

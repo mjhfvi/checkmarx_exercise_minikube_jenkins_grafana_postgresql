@@ -12,6 +12,7 @@
     "configmap",
     "dpkg",
     "hyperv",
+    "Ingressroute",
     "jcasc",
     "keyrings",
     "lans",

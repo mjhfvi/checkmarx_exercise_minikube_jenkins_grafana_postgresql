@@ -49,7 +49,7 @@ podLabels: {}
 ## @section Security Context
 podSecurityContext:
   ## @param podSecurityContext.fsGroup Group ID for the volumes of the pod
-  fsGroup: 999
+  fsGroup: 65534
 
 containerSecurityContext:
   ## @param containerSecurityContext.allowPrivilegeEscalation Enable container privilege escalation
@@ -57,9 +57,9 @@ containerSecurityContext:
   ## @param containerSecurityContext.runAsNonRoot Configure the container to run as a non-root user
   runAsNonRoot: true
   ## @param containerSecurityContext.runAsUser User ID for the PostgreSQL container
-  runAsUser: 999
+  runAsUser: 65534
   ## @param containerSecurityContext.runAsGroup Group ID for the PostgreSQL container
-  runAsGroup: 999
+  runAsGroup: 65534
   ## @param containerSecurityContext.readOnlyRootFilesystem Mount container root filesystem as read-only
   readOnlyRootFilesystem: false
   ## @param containerSecurityContext.capabilities.drop Linux capabilities to be dropped

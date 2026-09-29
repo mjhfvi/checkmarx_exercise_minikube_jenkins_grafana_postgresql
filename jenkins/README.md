@@ -66,13 +66,26 @@ helm repo update
 helm --namespace infrastructure install jenkins jenkins/jenkins -f values.yaml
 ```
 
-### Update Chart Values
+- Update Chart Values
 
 ```bash
 helm --namespace infrastructure upgrade --reset-values jenkins jenkins/jenkins -f values.yaml
 ```
 
-### Port Forwarding
+### Add Internet Access
+
+#### IngressRoute
+
+```bash
+kubectl apply -f ingress.yaml
+
+
+kubectl apply -f ingressroute.yaml
+
+kubectl delete -f ingressroute.yaml
+```
+
+#### Port Forwarding - Testing
 
 ```bash
 kubectl port-forward --namespace infrastructure --address 0.0.0.0 $(kubectl get pod --namespace infrastructure --selector "app.kubernetes.io/instance=jenkins" --output=name) 8080:8080

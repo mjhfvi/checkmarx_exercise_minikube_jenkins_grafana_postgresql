@@ -61,7 +61,7 @@ helm repo update
 helm --namespace monitoring install prometheus prometheus-community/prometheus -f values.yaml
 ```
 
-### Port Forwarding
+### Port Forwarding - Testing
 
 ```bash
 kubectl port-forward --namespace monitoring --address 0.0.0.0 $(kubectl get pods --namespace monitoring --selector "app.kubernetes.io/name=prometheus" --output=name) 9090:9090
@@ -76,3 +76,5 @@ kubectl delete pv prometheus-persistent-volume-nfs
 ```
 
 ## Notes
+
+[kubernetes local url](https://prometheus-server.monitoring.svc.cluster.local:80)
