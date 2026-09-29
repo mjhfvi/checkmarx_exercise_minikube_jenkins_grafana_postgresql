@@ -1,0 +1,8 @@
+# Source: https: //go.microsoft.com/fwlink/?LinkId=827846
+{
+  "recommendations": [
+    "foxundermoon.shell-format",
+    "rogalmic.bash-debug"
+  ],
+  "unwantedRecommendations": []
+}
