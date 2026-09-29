@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: prometheus-persistent-volume-nfs
+# 	annotations:
+# 		volume.beta.kubernetes.io/storage-provisioner: storage.io/prometheus-persistent-volume-nfs
+# 		volume.kubernetes.io/storage-provisioner: storage.io/prometheus-persistent-volume-nfs
+spec:
+    capacity:
+        storage: 10Gi
+    accessModes: [ReadWriteMany]
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: storage-nfs
+    # mountOptions:
+    #   - nfsvers=4.1
+    nfs:
+        path: /mnt/ExternalDisk1TB/minikube/prometheus
+        server: 192.168.200.100
+        readOnly: false
