@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jenkins-persistent-volume-nfs
+#   annotations:
+#     volume.beta.kubernetes.io/storage-provisioner: storage.io/jenkins-persistent-volume-nfs
+#     volume.kubernetes.io/storage-provisioner: storage.io/jenkins-persistent-volume-nfs
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes: [ReadWriteMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: storage-nfs
+    # mountOptions:
+    #   - nfsvers=4.1
+  nfs:
+    path: /mnt/ExternalDisk1TB/minikube/jenkins
+    server: 192.168.200.100
+    readOnly: false
