@@ -73,8 +73,25 @@ git() {
     else
         echo "Git is not installed, installing now\n"
         sudo apt update
-        sudo apt install ca-certificates curl
-        sudo install -m 0755 -d /etc/apt/keyrings
+        sudo apt install git
+    fi
+}
+
+terraform() {
+    printf "Starting Terraform Function\n\n"
+    if command -v terraform > /dev/null; then
+        echo "Terraform already installed"
+    else
+        echo "Terraform is not installed, installing now\n"
+        wget -O- https://apt.releases.hashicorp.com/gpg | \
+        gpg --dearmor | \
+        sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+        gpg --no-default-keyring \
+        --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+        --fingerprint
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+        sudo apt update
+        sudo apt install terraform
     fi
 }
 
@@ -85,7 +102,7 @@ command_libraries() {
     else
         echo "Command libraries are not installed, installing now\n"
         sudo apt update
-        sudo apt install ca-certificates curl
+        sudo apt install gnupg ca-certificates curl
         sudo install -m 0755 -d /etc/apt/keyrings
     fi
 }
@@ -119,7 +136,7 @@ uninstall() {
     exit 0
 }
 
-if [ -z "$1" ]; then
+if [ ! -z "$1" ]; then
     if [ "$1" == "install" ]; then
         echo "installing..."
         install
