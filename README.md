@@ -11,11 +11,9 @@ see project objective in the `doc` Folder
 ## User Environment
 
 - Network NAS (nfs Storage)
-- Windows 11
-- WSL2\Ubuntu 24.04
+- Ubuntu 26.04 LTS
 - VScode
 - Git
-- Windows Terminal
 - Lens K8S IDE
 
 ## Security
