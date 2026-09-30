@@ -110,3 +110,11 @@ kubectl delete pv jenkins-persistent-volume-nfs
 ## Notes
 
 - when using the `jcasc` plugin i dont need to use `persistence`
+- for the postgresql pipeline job, run the command to show the values from the db
+
+```sql
+SELECT *
+FROM job_runs
+ORDER BY id DESC;
+
+```

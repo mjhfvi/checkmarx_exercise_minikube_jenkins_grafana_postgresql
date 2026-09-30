@@ -34,9 +34,9 @@ helm --namespace infrastructure uninstall pgadmin4
 
 ## Notes
 
-  email: chart@domain.com
-  password: SuperSecret
-  server: postgresql.infrastructure.svc.cluster.local
-  port: 5432
-  user: postgres
-  password: "Check postgresql Secret"
+email: chart@domain.com
+password: SuperSecret
+server: postgresql.infrastructure.svc.cluster.local
+port: 5432
+user: postgres
+password: "Check postgresql Secret"
