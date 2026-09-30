@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Supported Parameters:
+#   $1 = uninstall
+
 minikube() {
     printf "Starting Minikube Function\n\n"
     if command -v minikube > /dev/null; then
@@ -63,6 +66,18 @@ EOF
 
 }
 
+git() {
+    printf "Starting Git Function\n\n"
+    if command -v git > /dev/null; then
+        echo "Git already installed"
+    else
+        echo "Git is not installed, installing now\n"
+        sudo apt update
+        sudo apt install ca-certificates curl
+        sudo install -m 0755 -d /etc/apt/keyrings
+    fi
+}
+
 command_libraries() {
     printf "Starting Command libraries Function\n\n"
     if command -v curl > /dev/null; then
@@ -86,15 +101,33 @@ start_minikube() {
     fi
 }
 
-main() {
+install() {
     printf "Running Installation script\n"
     command_libraries
     minikube
     kubectl
     helm
     docker
+    git
     start_minikube
     exit 0
 }
 
-main
+uninstall() {
+    printf "Running Uninstallation script\n"
+    sudo apt remove minikube kubectl helm docker git
+    exit 0
+}
+
+if [ -z "$1" ]; then
+    if [ "$1" == "install" ]; then
+        echo "installing..."
+        install
+    elif [ "$1" == "uninstall" ]; then
+        echo "uninstalling..."
+        uninstall
+    else
+        echo "Unknown argument Exiting."
+        exit 1
+    fi
+fi
