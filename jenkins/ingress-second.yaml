@@ -13,6 +13,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: jenkins
+            name: jenkins-second
             port:
               number: 8080
