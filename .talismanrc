@@ -13,6 +13,8 @@ fileignoreconfig:
     ignore_detectors: [filecontent]
   - filename: postgresql/pgadmin/values.yaml
     ignore_detectors: [filecontent]
+  - filename: terraform/README.md
+    ignore_detectors: [filecontent]
 
   - filename: postgresql/exporter/postgresql-secret.yaml
     ignore_detectors: [filename]
