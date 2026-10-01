@@ -2,10 +2,10 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-    name: storage-nfs
-# 	annotations:
-# 		Optional: Make this the default StorageClass in your cluster
-# 		storageclass.kubernetes.io/is-default-class: "true"
+  name: storage-nfs
+#   annotations:
+#     Optional: Make this the default StorageClass in your cluster
+#     storageclass.kubernetes.io/is-default-class: "true"
 provisioner: storage.io/storage-nfs
 reclaimPolicy: Retain
 # reclaimPolicy: Delete
@@ -14,9 +14,9 @@ allowVolumeExpansion: true
 # mountOptions:
 #   - debug
 parameters:
-    server: 192.168.200.100
-    path: /mnt/ExternalDisk1TB/minikube
-    readOnly: "false"
+  server: 192.168.200.100
+  path: /mnt/ExternalDisk1TB/minikube
+  readOnly: 'false'
     # mountOptions:
     #   - hard
     #   - timeo=600

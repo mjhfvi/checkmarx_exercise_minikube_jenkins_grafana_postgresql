@@ -5,5 +5,5 @@ metadata:
   name: postgresql-configmap
   namespace: infrastructure
 data:
-    POSTGRES_DB: postgres
-    PGDATA: /var/lib/postgresql/data/dbdata
+  POSTGRES_DB: postgres
+  PGDATA: /var/lib/postgresql/data/dbdata

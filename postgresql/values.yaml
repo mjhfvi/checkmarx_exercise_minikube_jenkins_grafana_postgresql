@@ -1,24 +1,22 @@
+---
 ## Default values for PostgreSQL deployment
-
 ## PostgreSQL docker image
 image:
-  registry: "docker.io"
-  repository: "postgres"
+  registry: docker.io
+  repository: postgres
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
+  tag: ''
 ## Pull secrets and name override options
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
 
 ## Additional labels for Deployment or StatefulSet
 customLabels: {}
 
 ## Additional annotations for Deployment or StatefulSet
 customAnnotations: {}
-
 ## Optional service account
 serviceAccount:
   # Specifies whether a service account should be created
@@ -27,8 +25,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
+  name: ''
 ## Additional pod annotations
 podAnnotations: {}
 
@@ -40,13 +37,11 @@ podManagementPolicy: OrderedReady
 
 ## Pod update strategy
 updateStrategyType: RollingUpdate
-
 ## Pod security context uses file system group 999 (postgres)
 podSecurityContext:
   fsGroup: 999
   supplementalGroups:
     - 999
-
 ## Default security options to run PostgreSQL as non-root (postgres user), read only container without privilege escalation
 securityContext:
   allowPrivilegeEscalation: false
@@ -58,7 +53,6 @@ securityContext:
   capabilities:
     drop:
       - ALL
-
 ## The postgres service configuration (Default is ClusterIP with port 5432)
 service:
   type: ClusterIP
@@ -75,8 +69,6 @@ service:
   annotations: {}
   ## Labels to add to the service
   labels: {}
-
-
 resources: {}
   # limits:
   #   cpu: 100m
@@ -86,7 +78,7 @@ resources: {}
   #   memory: 128Mi
 
 ## Pod priority class name
-priorityClassName: ""
+priorityClassName: ''
 
 ## Additional node selector
 nodeSelector: {}
@@ -99,13 +91,10 @@ affinity: {}
 
 ## Topology spread constraints for pods
 topologySpreadConstraints: {}
-
 ## Maximum number of revisions maintained in revision history
 revisionHistoryLimit:
-
 ## Custom startup probe (overwrites default startup probe)
 customStartupProbe: {}
-
 ## Default startup check
 startupProbe:
   enabled: true
@@ -114,10 +103,8 @@ startupProbe:
   failureThreshold: 30
   successThreshold: 1
   periodSeconds: 10
-
 ## Custom liveness probe (overwrites default liveness probe)
 customLivenessProbe: {}
-
 ## Default health check
 livenessProbe:
   enabled: true
@@ -126,10 +113,8 @@ livenessProbe:
   failureThreshold: 3
   successThreshold: 1
   periodSeconds: 10
-
 ## Custom readiness probe (overwrites default readiness probe)
 customReadinessProbe: {}
-
 ## Default readiness probe
 readinessProbe:
   enabled: true
@@ -138,7 +123,6 @@ readinessProbe:
   failureThreshold: 3
   successThreshold: 1
   periodSeconds: 10
-
 ## Extra init containers
 extraInitContainers: []
 
@@ -162,11 +146,10 @@ args: []
 
 ## Use Kubernetes Deployment instead of StatefulSet
 useDeployment: false
-
 ## Database configuration
 settings:
   ## Optional existing secret for the Postgrest superuser
-  existingSecret: "postgresql-secret"
+  existingSecret: postgresql-secret
 
   ## The default postgres superuser (default when nothing is set: "postgres")
   superuser:
@@ -187,14 +170,13 @@ settings:
   initDbArgs:
 
   ## Default data directory mountpoint
-  dataDir: "/var/lib/postgresql/data"
+  dataDir: /var/lib/postgresql/data
 
   ## Name of the postgres directory inside data directory
   ## This is necessary because of the default behavior of the docker-entrypoint.sh in the container image
   ## The default entrypoint always tries to create a directory and set permissions on it. Thats is the reason why data directory mountpoint and directory inside must two different configuration options
   ## PGDATA will be dataDir+pgDir => "/var/lib/postgresql/data/pg" while volume mount point will be dataDir => "/var/lib/postgresql/data"
-  pgDir: "pg"
-
+  pgDir: pg
 ## Optional user database which is created during first startup with user and password
 userDatabase: {}
   ## Optional existing secret with database name, user and password
@@ -230,14 +212,11 @@ customScripts: {}
 ## As an alternative these secrets can set the database superuser password or other options when settings.superuserPassword was not specified
 ## For example: Setting POSTGRES_DB, USERDB_USER, USERDB_PASSWORD will allow creating a user database and grant access for the given user
 extraEnvSecrets: []
-
 ## An existing secret with files that will be added to the postgres configuration in addition to /etc/postgresql/postgresql.conf
 extraSecretConfigs:
-
 ## An existing configMap with files that will be mounted into the container as script files (*.sql, *.sh) in /docker-entrypoint-initdb.d
 ## For more details see https://hub.docker.com/_/postgres
 extraScripts:
-
 ## A list of additional existing secrets that will be mounted into the container
 ## The mounted files of the secrets can be used for advanced configuration - f.e. TLS
 extraSecrets: []
@@ -247,7 +226,6 @@ extraSecrets: []
 #    defaultMode: 0440
     ## Mount path where the secret should be mounted into the container (f.e. /mysecretfolder)
 #    mountPath:
-
 ## A list of additional existing configMaps that will be mounted into the container
 extraConfigs: []
     ## Name of the existing K8s configMap
@@ -256,14 +234,13 @@ extraConfigs: []
 #    defaultMode: 0440
     ## Mount path where the configMap should be mounted into the container (f.e. /mysecretfolder)
 #    mountPath:
-
 ## Storage parameters
 storage:
   ##  Set persistentVolumenClaimName to reference an existing PVC
-  persistentVolumeClaimName: "postgresql-persistent-volume-claim-nfs"
+  persistentVolumeClaimName: postgresql-persistent-volume-claim-nfs
 
   ## Internal volume name and prefix of a created PVC
-  volumeName: "postgres-data"
+  volumeName: postgres-data
 
   ## Alternative set requestedSize to define a size for a dynmaically created PVC
   requestedSize:
@@ -290,7 +267,6 @@ storage:
 
   ## Additional storage labels
   labels: {}
-
 ## Mount existing extra PVC
 extraStorage: {}
     ## Internal volume name
@@ -299,7 +275,6 @@ extraStorage: {}
 #    mountPath:
     ## Name of existing PVC
 #    pvcName:
-
 ## Network policies
 networkPolicy: {}
   ## Ingress and Egress policies

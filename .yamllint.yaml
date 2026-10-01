@@ -1,5 +1,5 @@
 ---
-yaml-files: ["*.yaml", "*.yml", .yamllint]
+yaml-files: ['*.yaml', '*.yml', .yamllint]
 rules:
   anchors: enable
   braces: enable
@@ -27,8 +27,7 @@ rules:
   truthy:
     level: warning
   line-length:
-    max: 80
+    max: 400
     level: warning
-
 ignore: [.pre-commit-config.yaml]
 # ignore-from-file: [.gitignore]

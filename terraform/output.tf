@@ -5,5 +5,5 @@ output "org_name" {
 
 output "dashboard_id" {
   description = "ID of Dashboard"
-  value       = try(grafana_dashboard.my_dashboard.dashboard_id, null)
+  value       = try(grafana_dashboard.postgresql_dashboard.dashboard_id, null)
 }

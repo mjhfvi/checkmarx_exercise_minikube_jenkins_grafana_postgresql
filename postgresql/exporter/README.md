@@ -33,4 +33,3 @@ helm --namespace infrastructure uninstall prometheus-postgres-exporter
 ```
 
 ## Notes
-

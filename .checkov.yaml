@@ -1,0 +1,23 @@
+---
+# Directories and Files to Scan
+directory: [.]
+skip-path:
+  - bash-tools
+  - tests
+# Framework Restrictions
+framework:
+  - terraform
+  - kubernetes
+# Rule Controls
+check: [CKV_AWS_1]
+skip-check:
+  - CKV_AWS_20
+  - CKV_GCP_11
+# Output Formatting and Behavior
+output: cli
+quiet: true
+compact: true
+soft-fail: false
+
+# External Components
+download-external-modules: true

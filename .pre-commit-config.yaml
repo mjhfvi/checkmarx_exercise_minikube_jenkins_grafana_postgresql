@@ -8,7 +8,7 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     # name: pre-commit-hooks (out-of-the-box hooks for pre-commit)
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
         description: Trims trailing whitespace.
@@ -36,15 +36,19 @@ repos:
       - id: check-yaml
         verbose: true
         args: [--allow-multiple-documents]
+        exclude: .pre-commit-config.yaml | */values.yaml
       - id: pretty-format-json
         verbose: true
         args: [--autofix]
+        exclude: '^.vscode/'
       - id: check-json
         verbose: true
+        exclude: '^.vscode/'
       - id: check-merge-conflict
         verbose: true
       - id: check-vcs-permalinks
         verbose: true
+        exclude:  .pre-commit-config.yaml | */values.yaml
       - id: forbid-new-submodules
         verbose: true
       - id: no-commit-to-branch
@@ -55,14 +59,15 @@ repos:
       - id: mixed-line-ending
         verbose: true
         args: [--fix=lf]
-      # - id: detect-aws-credentials
-      #   verbose: true
-      # - id: detect-private-key
-      #   verbose: true
-      #   exclude: gitleaks-report.json
+      - id: detect-aws-credentials
+        verbose: true
+        args: ['--allow-missing-credentials']
+      - id: detect-private-key
+        verbose: true
+        exclude: gitleaks-report.json
 
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.5
+    rev: v1.5.6
     hooks:
       - id: forbid-crlf
         name: pre-commit-hooks (Lucas-C - useful git hooks)
@@ -78,7 +83,7 @@ repos:
         args: [--whitespaces-count, "2"] # defaults to: 4
 
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.7.0
+    rev: v3.2.0
     hooks:
       - id: setup-cfg-fmt
         name: setup-cfg-fmt (apply a consistent format to setup.cfg files)
@@ -93,12 +98,12 @@ repos:
         verbose: true
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.30.2
+    rev: v1.50.3
     hooks:
       - id: typos
         name: typos (Finds and corrects spelling mistakes)
         args: ["--config", ".typos.toml", "-v"]
-        exclude: gitleaks-report.json
+        exclude: gitleaks-report.json|values\.yaml|jenkins/example-values-jenkins.yaml
 
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
@@ -108,18 +113,18 @@ repos:
         files: .json5$
 
   - repo: https://github.com/lyz-code/yamlfix/
-    rev: 1.17.0
+    rev: 1.19.1
     hooks:
       - id: yamlfix
-        exclude: .pre-commit-config.yaml
+        exclude: .pre-commit-config.yaml|values\.yaml
 
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.36.0
+    rev: v1.38.0
     hooks:
       - id: yamllint
         name: yamllint (linter for YAML files)
         args: [--format, auto]
-        exclude: .pre-commit-config.yaml
+        exclude: .pre-commit-config.yaml|values\.yaml
 
 #   - repo: https://github.com/pre-commit/pygrep-hooks
 #     rev: v1.10.0
@@ -183,7 +188,7 @@ repos:
 #         args: [--sources, pypa] # gemnasium|github|osv|pypa|pyup
 
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.8.3
+    rev: 1.9.4
     hooks:
       - id: bandit
         name: bandit (security linter in Python code)
@@ -195,84 +200,75 @@ repos:
       - id: jenkinslint
         name: jenkinslint (basic Jenkinsfile linter)
 
-#   - repo: https://github.com/terraform-docs/terraform-docs
-#     rev: v0.19.0
-#     hooks:
-#       - id: terraform-docs-go
-#         args: [markdown, table, --output-file, README.md, ./]
+  # - repo: https://github.com/terraform-docs/terraform-docs
+  #   rev: v0.19.0
+  #   hooks:
+  #     - id: terraform-docs-go
+  #       args: [markdown, table, --output-file, README.md, ./]
+  #       args: [--args=--config=.terraform-docs.yml]
 
-#   - repo: https://github.com/antonbabenko/pre-commit-terraform
-#     rev: v1.97.4
-#     hooks:
-#       - id: terraform_fmt
-#         verbose: true
-#         # args: [--hook-config=--parallelism-ci-cpu-cores=1]
-#       - id: terraform_tflint
-#         verbose: true
-#       # args: [--minimum-failure-severity=[notice,warning]]
-#       # args: [--hook-config=--parallelism-ci-cpu-cores=1]
-#       - id: terraform_validate
-#         verbose: true
-#       - id: terraform_trivy
-#         verbose: true
-#       # files: ^prd-infra/
-#       - id: terraform_providers_lock
-#         verbose: true
-#         # args: [--hook-config=--parallelism-limit=CPU*4]
-#       - id: terraform_checkov
-#         verbose: true
-#         # args: ["--config-file", ".checkov.yaml"]
-#         # args: [--args=--quiet, --args=--skip-check CKV2_AWS_8]
-#       # - id: terraform_tfsec
-#       #   verbose: true
-#       # - id: infracost_breakdown
-#       #   verbose: true
-#       #   args: [--args=--path=./env/dev]
-#       # - id: infracost_breakdown
-#       #   verbose: true
-#       #   args:
-#       #     - --args=--path=./env/dev
-#       #     - --args=--terraform-var-file="terraform.tfvars"
-#       #     - --args=--terraform-var-file="../terraform.tfvars"
-#       - id: terraform_docs
-#         verbose: true
-#         args: [--args=--config=.terraform-docs.yml]
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.109.2
+    hooks:
+      - id: terraform_fmt
+        verbose: true
+        # args: [--hook-config=--parallelism-ci-cpu-cores=1]
+      - id: terraform_tflint
+        verbose: true
+      # args: [--minimum-failure-severity=[notice,warning]]
+      # args: [--hook-config=--parallelism-ci-cpu-cores=1]
+      - id: terraform_validate
+        verbose: true
+      - id: terraform_trivy
+        verbose: true
+      # files: ^prd-infra/
+      - id: terraform_providers_lock
+        verbose: true
+        # args: [--hook-config=--parallelism-limit=CPU*4]
+      # - id: terraform_checkov
+      #   verbose: true
+      #   args: ["--config-file", ".checkov.yaml"]
+        # args: [--args=--quiet, --args=--skip-check CKV2_AWS_8]
+      # - id: infracost_breakdown
+      #   args:
+      #     - --args=--path=./terraform
+      #   verbose: true
 
-#   - repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
-#     rev: v0.1.0
-#     hooks:
-#       - id: dockerfilelint
-#         name: dockerfilelint-precommit-hooks (Useful pre-commit hooks for checking Dockerfiles)
-#         stages: [pre-commit]
+  - repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
+    rev: v0.1.0
+    hooks:
+      - id: dockerfilelint
+        name: dockerfilelint-precommit-hooks (Useful pre-commit hooks for checking Dockerfiles)
+        stages: [pre-commit]
 
-#   - repo: https://github.com/hadolint/hadolint
-#     rev: v2.13.1-beta
-#     hooks:
-#       - id: hadolint
-#         name: Lint Dockerfiles
-#         description: Runs hadolint to lint Dockerfiles
-#         language: system
-#         types: ["dockerfile"]
-#         entry: hadolint
-#         args:
-#           [
-#             "--ignore",
-#             "DL3007",
-#             "--ignore",
-#             "DL3013",
-#             "--ignore",
-#             "DL3027",
-#             "--ignore",
-#             "DL3059",
-#             "--ignore",
-#             "DL4006",
-#             "--ignore",
-#             "SC1091",
-#             "--ignore",
-#             "SC2015",
-#             "--ignore",
-#             "SC3037",
-#           ]
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.13.1-beta
+    hooks:
+      - id: hadolint
+        name: Lint Dockerfiles
+        description: Runs hadolint to lint Dockerfiles
+        language: system
+        types: ["dockerfile"]
+        entry: hadolint
+        args:
+          [
+            "--ignore",
+            "DL3007",
+            "--ignore",
+            "DL3013",
+            "--ignore",
+            "DL3027",
+            "--ignore",
+            "DL3059",
+            "--ignore",
+            "DL4006",
+            "--ignore",
+            "SC1091",
+            "--ignore",
+            "SC2015",
+            "--ignore",
+            "SC3037",
+          ]
 
   # - repo: https://github.com/dmitri-lerko/pre-commit-docker-kustomize
   #   rev: f3a8533
@@ -283,28 +279,28 @@ repos:
   #         args: [overlays/development]
   #         verbose: false
 
-#   - repo: https://github.com/zwennesm/pre-commit-k8s
-#     rev: 0.0.3
-#     hooks:
-#       - id: pre-commit-k8s
-#         entry: pre-commit-k8s
-#         # exclude:
+  - repo: https://github.com/zwennesm/pre-commit-k8s
+    rev: 0.0.3
+    hooks:
+      - id: pre-commit-k8s
+        entry: pre-commit-k8s
+        exclude: postgresql-secret.yaml|jenkins-secret.yaml
 
-#   - repo: https://github.com/stackrox/kube-linter
-#     rev: v0.7.2 # kube-linter version
-#     hooks:
-#       - id: kube-linter
-#         name: kube-linter (static analysis tool for Kubernetes YAML files)
-#         args: [-v]
-#         files: .yaml$
-#         # exclude:
+  - repo: https://github.com/stackrox/kube-linter
+    rev: v0.7.2 # kube-linter version
+    hooks:
+      - id: kube-linter
+        name: kube-linter (static analysis tool for Kubernetes YAML files)
+        args: [-v]
+        files: .yaml$
+        # exclude:
 
-#   - repo: https://github.com/norwoodj/helm-docs
-#     rev: v1.14.2
-#     hooks:
-#       - id: helm-docs
-#         name: helm-docs (auto-generates documentation from helm charts into markdown)
-#         # exclude:
+  - repo: https://github.com/norwoodj/helm-docs
+    rev: v1.14.2
+    hooks:
+      - id: helm-docs
+        name: helm-docs (auto-generates documentation from helm charts into markdown)
+        # exclude:
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
@@ -319,7 +315,7 @@ repos:
         # exclude:
 
   - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.24.0
+    rev: v8.30.0
     hooks:
       - id: gitleaks
         name: gitleaks
@@ -328,7 +324,7 @@ repos:
         exclude: .secrets.baseline
 
   - repo: https://github.com/thoughtworks/talisman
-    rev: v1.32.1
+    rev: v1.37.0
     hooks:
       - id: talisman-commit
         name: talisman (scans git to ensure that potential secrets or sensitive information)

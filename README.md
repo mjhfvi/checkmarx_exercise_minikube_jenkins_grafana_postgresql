@@ -32,8 +32,20 @@ list some of the tools
 
 Manual Install pip libraries
 
+### Using APT
+
+```bash
+sudo apt install pre-commit
+```
+### Using pip
+
 ```bash
 pip install pre-commit --break-system-packages
+```
+
+### Running pre-commit
+
+```bash
 pre-commit install
 pre-commit autoupdate
 pre-commit run --all-files --verbose

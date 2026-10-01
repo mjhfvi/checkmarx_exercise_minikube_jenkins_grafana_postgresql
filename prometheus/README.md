@@ -96,4 +96,3 @@ kubectl delete pv prometheus-persistent-volume-nfs
 ```
 
 ## Notes
-

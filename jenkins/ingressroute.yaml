@@ -5,14 +5,12 @@ metadata:
   name: jenkins-ingressroute
   namespace: infrastructure
 spec:
-  entryPoints:
-  # - web
-  - websecure
+  entryPoints: [websecure]
   routes:
-  - kind: Rule
-    match: Host(`jenkins2.minikube.local`)
-    services:
-    - name: jenkins
-      port: 8080
+    - kind: Rule
+      match: Host(`jenkins2.minikube.local`)
+      services:
+        - name: jenkins
+          port: 8080
       # namespace: infrastructure
   tls: {}
