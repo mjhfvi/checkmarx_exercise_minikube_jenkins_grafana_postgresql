@@ -59,15 +59,36 @@ pre-commit run --all-files --verbose
 - Docker
 - Kubernetes
 - Helm
+- Terraform
+- Git
 
-### Install Tools
+## Prepare Environment
 
-[Install Cluster Tools Manual](./kubernetes/README.md)
+### Install Tools Script
 
-### Deploy Apps to Cluster
+- Build Minikube Script
 
-[Install PostgreSQL](./postgres/README.md)
+[Install Script](./script/README.md)
+
+### Deploy Applications to Cluster
+
+- Setup Kubernetes
+
+[Kubernetes](./kubernetes/README.md)\
+[Volume Persistent](./Kubernetes/PERSISTENT.md)
+
+- Deploy Applications
+
+[Install PostgreSQL](./postgres/README.md)\
+[Install Jenkins](./jenkins/README.md)\
+[Install Prometheus](./prometheus/README.md)\
+[Install Grafana](./grafana/README.md)
+[Install Traefik](./traefik/README.md)
+
+- Setup Infrastructure
+
+[Terraform](./terraform/README.md)
 
 ## Troubleshooting Issues
 
-[troubleshooting](./TROUBLESHOOTING.md)
+[Troubleshooting](./TROUBLESHOOTING.md)

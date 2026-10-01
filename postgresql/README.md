@@ -83,4 +83,9 @@ kubectl delete pv postgres-persistent-volume-nfs
 helm repo remove postgresql
 ```
 
+## Tools
+
+[Metrics Exporter](./exporter/README.md)\
+[PGAdmin](./pgadmin/README.md)
+
 ## Notes
