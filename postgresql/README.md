@@ -89,3 +89,15 @@ helm repo remove postgresql
 [PGAdmin](./pgadmin/README.md)
 
 ## Notes
+
+- for the postgresql pipeline job, run the command to show the values from the db
+
+```sql
+SELECT *
+FROM job_runs
+ORDER BY id DESC;
+```
+
+- run psql command with `kubectl`
+
+kubectl --namespace infrastructure exec -it postgresql-0 -- psql -U postgres -d TEMP -c "SELECT * FROM job_runs ORDER BY id DESC;"

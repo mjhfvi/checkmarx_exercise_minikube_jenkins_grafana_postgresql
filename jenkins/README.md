@@ -116,5 +116,4 @@ kubectl delete pv jenkins-persistent-volume-nfs
 SELECT *
 FROM job_runs
 ORDER BY id DESC;
-
 ```
