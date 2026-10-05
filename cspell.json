@@ -10,12 +10,17 @@
     "buildx",
     "Checkmarx",
     "configmap",
+    "controlplane",
     "dpkg",
     "hyperv",
     "Ingressroute",
     "jcasc",
     "keyrings",
+    "kubeconfig",
     "lans",
-    "storageclass"
+    "storageclass",
+    "talosconfig",
+    "talosctl",
+    "Telos"
   ]
 }
