@@ -11,7 +11,7 @@
 kubectl create namespace infrastructure
 ```
 
-<!-- ### Persistent Volume
+### Persistent Volume
 
 add Persistent Volume for the infrastructure storage
 
@@ -37,7 +37,7 @@ kubectl --namespace infrastructure describe pvc jenkins-persistent-volume-claim-
 ```bash
 kubectl --namespace infrastructure delete pvc jenkins-persistent-volume-claim-nfs
 kubectl delete pv jenkins-persistent-volume-nfs
-``` -->
+```
 
 ## Add Admin Secret
 
@@ -50,12 +50,17 @@ kubectl --namespace infrastructure apply -f jenkins-secret.yaml
 edit the `values.yaml` file, disable `usePodSecurityContext`
 
 ```txt
-controller:
-  usePodSecurityContext: false
 persistence:
-  enabled: false
+  enabled: true
+  existingClaim: "jenkins-persistent-volume-claim-nfs"
 admin:
   existingSecret: "jenkins-admin-credentials-secret"
+controller:
+  usePodSecurityContext: false
+  JCasC:
+    configScripts:
+      jcasc-custom-config |
+
 ```
 
 ### Install the Chart
@@ -63,7 +68,10 @@ admin:
 ```bash
 helm repo add jenkins https://charts.jenkins.io
 helm repo update
-helm --namespace infrastructure install jenkins jenkins/jenkins -f values.yaml
+helm --namespace infrastructure install jenkins-main jenkins/jenkins -f values.yaml
+helm --namespace infrastructure install jenkins-second jenkins/jenkins -f values.yaml
+helm --namespace infrastructure install jenkins-third jenkins/jenkins -f values.yaml
+
 ```
 
 - Update Chart Values
@@ -82,6 +90,7 @@ kubectl apply -f ingress.yaml
 
 kubectl apply -f ingressroute.yaml
 
+kubectl replace -f ingressroute.yaml
 kubectl delete -f ingressroute.yaml
 ```
 
@@ -94,7 +103,10 @@ kubectl port-forward --namespace infrastructure --address 0.0.0.0 $(kubectl get 
 ## Remove the Chart
 
 ```bash
-helm --namespace infrastructure uninstall jenkins
+helm --namespace infrastructure uninstall jenkins-main
+helm --namespace infrastructure uninstall jenkins-second
+helm --namespace infrastructure uninstall jenkins-third
+
 kubectl --namespace infrastructure delete pvc jenkins-persistent-volume-claim-nfs
 kubectl delete pv jenkins-persistent-volume-nfs
 ```
@@ -102,3 +114,10 @@ kubectl delete pv jenkins-persistent-volume-nfs
 ## Notes
 
 - when using the `jcasc` plugin i dont need to use `persistence`
+- for the postgresql pipeline job, run the command to show the values from the db
+
+```sql
+SELECT *
+FROM job_runs
+ORDER BY id DESC;
+```

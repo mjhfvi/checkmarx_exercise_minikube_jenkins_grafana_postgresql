@@ -1559,8 +1559,8 @@ additionalAgents: {}
 #  maven:
 #    podName: maven
 #    customJenkinsLabels: maven
-#    # An example of overriding the jnlp container
-#    # sideContainerName: jnlp
+#  # An example of overriding the jnlp container
+#  # sideContainerName: jnlp
 #    image:
 #      repository: jenkins/jnlp-agent-maven
 #      tag: latest
@@ -1588,8 +1588,8 @@ additionalClouds: {}
 #      maven-2:
 #        podName: maven-2
 #        customJenkinsLabels: maven
-#        # An example of overriding the jnlp container
-#        # sideContainerName: jnlp
+#  # An example of overriding the jnlp container
+#  # sideContainerName: jnlp
 #        image:
 #          repository: jenkins/jnlp-agent-maven
 #          tag: latest

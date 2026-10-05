@@ -787,6 +787,42 @@ controller:
               env:
               - key: "PATH+EXTRA"
                 value: "/home/tzahi/.local/bin/"
+          clouds:
+          - kubernetes:
+              containerCap: 10
+              containerCapStr: "10"
+              jenkinsTunnel: "jenkins-main-agent.infrastructure.svc.cluster.local:50000"
+              jenkinsUrl: "http://jenkins-main.infrastructure.svc.cluster.local:8080"
+              name: "kubernetes"
+              namespace: "infrastructure"
+              podLabels:
+              - key: "jenkins/jenkins-main-jenkins-agent"
+                value: "true"
+              serverUrl: "https://kubernetes.default"
+              templates:
+              - containers:
+                - args: "^${computer.jnlpmac} ^${computer.name}"
+                  envVars:
+                  - envVar:
+                      key: "JENKINS_URL"
+                      value: "http://jenkins-main.infrastructure.svc.cluster.local:8080/"
+                  image: "jenkins/inbound-agent:3385.vf1123fb_515da_-1"
+                  name: "jnlp"
+                  resourceLimitCpu: "512m"
+                  resourceLimitMemory: "512Mi"
+                  resourceRequestCpu: "512m"
+                  resourceRequestMemory: "512Mi"
+                  workingDir: "/home/jenkins/agent"
+                id: "95d21559f6381190c43a9aa24e40c4b09348e5a043c03a5d3e59615d2435de79"
+                label: "jenkins-main-jenkins-agent"
+                name: "default"
+                namespace: "infrastructure"
+                nodeUsageMode: NORMAL
+                podRetention: "never"
+                serviceAccount: "default"
+                slaveConnectTimeout: 100
+                slaveConnectTimeoutStr: "100"
+                yamlMergeStrategy: "override"
       jcasc-custom-config-credentials: |  # pragma: allowlist secret
         credentials:
           system:
@@ -983,7 +1019,7 @@ controller:
                       remote: "https://github.com/mjhfvi/JenkinsExamples.git"
                       traits:
                       - "gitBranchDiscovery"
-      pipeline-job: |
+      pipeline-job-dsl-plugin: |
         jobs:
           - script: >
               pipelineJob('job-dsl-plugin') {
@@ -1003,6 +1039,67 @@ controller:
                   }
                 }
               }
+      pipeline-job-db-add-data: |
+        jobs:
+          - script: >
+              pipeline {
+                  agent {
+                      kubernetes {
+                          yaml '''
+              apiVersion: v1
+              kind: Pod
+              spec:
+                containers:
+                  - name: worker
+                    image: postgres:16
+                    command:
+                      - cat
+                    tty: true
+              '''
+                          defaultContainer 'worker'
+                      }
+                  }
+
+                  triggers {
+                      cron('H/5 * * * *')
+                  }
+
+                  // environment {
+                  //     // DB_HOST = credentials('db-host')
+                  //     // DB_NAME = credentials('db-name')
+                  // }
+
+                  stages {
+                      stage('Record timestamp') {
+                          steps {
+                                  sh '''
+                                      set -e
+
+                                      export PGPASSWORD=""
+
+                                      psql \
+                                        -h "postgresql.infrastructure.svc.cluster.local" \
+                                        -U "postgres" \
+                                        -d "TEMP" \
+                                        -c "CREATE TABLE IF NOT EXISTS job_runs (
+                                              id BIGSERIAL PRIMARY KEY,
+                                              run_timestamp TIMESTAMP NOT NULL
+                                            );"
+
+                                      psql \
+                                        -h "postgresql.infrastructure.svc.cluster.local" \
+                                        -U "postgres" \
+                                        -d "TEMP" \
+                                        -c "INSERT INTO job_runs (run_timestamp)
+                                            VALUES (CURRENT_TIMESTAMP);"
+
+                                  '''
+
+                          }
+                      }
+                  }
+              }
+
     # Allows adding to the top-level security JCasC section. For legacy purposes, by default, the chart includes apiToken configurations
     # -- Jenkins Config as Code security-section
     security:
@@ -1784,7 +1881,7 @@ additionalClouds: {}
 
 persistence:
   # -- Enable the use of a Jenkins PVC
-  enabled: false
+  enabled: true
 
   # A manually managed Persistent Volume and Claim
   # Requires persistence.enabled: true

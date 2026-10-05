@@ -41,13 +41,13 @@ Source: [URL](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2F
 ```bash
 curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
-rm minikube-linux-amd64 -y
+rm minikube-linux-amd64
 ```
 
 ### Start Minikube (Tested with WSL2 Ubuntu 24.04 on Windows 11)
 
 ```bash
-minikube start --driver=hyperv
+minikube start
 ```
 
 - lans access to minikube

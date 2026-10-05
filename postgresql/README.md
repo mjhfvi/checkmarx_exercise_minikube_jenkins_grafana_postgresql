@@ -8,19 +8,19 @@
 ### Add Namespace
 
 ```bash
-kubectl create namespace database
+kubectl create namespace infrastructure
 ```
 
 ### Persistent Volume
 
-add Persistent Volume for the database storage
+add Persistent Volume for the infrastructure storage
 
 edit the `postgres-persistent-volume-nfs.yaml` file
 
 ```bash
 spec:
     nfs:
-        path: /home/USER/.nfs/storage/postgresql
+        path: /path/on/server/jenkins
         server: SERVER_IP_ADDRESS
 ```
 
@@ -28,7 +28,7 @@ spec:
 
 ```bash
 kubectl apply -f postgres-persistent-volume-nfs.yaml
-kubectl --namespace database apply -f postgres-persistent-volume-claim.yaml
+kubectl --namespace infrastructure apply -f postgres-persistent-volume-claim.yaml
 ```
 
 - Test the `persistent-volume`
@@ -38,13 +38,13 @@ kubectl get pv
 kubectl describe pv postgres-persistent-volume-nfs
 
 kubectl get pvc
-kubectl --namespace database describe pvc postgresql-persistent-volume-claim-nfs
+kubectl --namespace infrastructure describe pvc postgresql-persistent-volume-claim-nfs
 ```
 
 - Remove pv/pvc
 
 ```bash
-kubectl --namespace database delete pvc postgresql-persistent-volume-claim-nfs
+kubectl --namespace infrastructure delete pvc postgresql-persistent-volume-claim-nfs
 kubectl delete pv postgres-persistent-volume-nfs
 ```
 
@@ -60,19 +60,44 @@ data:
 
 ### Install the Chart
 
-```bash
-kubectl --namespace database apply -f postgresql-secret.yaml
-kubectl --namespace database apply -f postgresql-configmap.yaml
+setup the configmap and secrets
 
-helm --namespace database install postgresql oci://registry-1.docker.io/cloudpirates/postgres -f values.yaml
+```bash
+kubectl --namespace infrastructure apply -f postgresql-secret.yaml
+kubectl --namespace infrastructure apply -f postgresql-configmap.yaml
+```
+
+apply the chart
+
+```bash
+helm repo add groundhog2k https://groundhog2k.github.io/helm-charts/
+helm --namespace infrastructure install postgresql groundhog2k/postgres -f values.yaml
 ```
 
 ## Remove the Chart
 
 ```bash
-helm --namespace database uninstall postgresql
-kubectl --namespace database delete pvc postgresql-persistent-volume-claim-nfs
+helm --namespace infrastructure uninstall postgresql
+kubectl --namespace infrastructure delete pvc postgresql-persistent-volume-claim-nfs
 kubectl delete pv postgres-persistent-volume-nfs
+helm repo remove postgresql
 ```
 
+## Tools
+
+[Metrics Exporter](./exporter/README.md)\
+[PGAdmin](./pgadmin/README.md)
+
 ## Notes
+
+- for the postgresql pipeline job, run the command to show the values from the db
+
+```sql
+SELECT *
+FROM job_runs
+ORDER BY id DESC;
+```
+
+- run psql command with `kubectl`
+
+kubectl --namespace infrastructure exec -it postgresql-0 -- psql -U postgres -d TEMP -c "SELECT * FROM job_runs ORDER BY id DESC;"

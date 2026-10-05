@@ -8,18 +8,29 @@
 ### Add Namespace
 
 ```bash
-kubectl create namespace monitoring
+kubectl create namespace infrastructure
 ```
 
 ### Persistent Volume
 
-add Persistent Volume for the monitoring storage
+add Persistent Volume for the infrastructure storage
+
+edit the `prometheus-persistent-volume-nfs.yaml` file
+
+```bash
+spec:
+    nfs:
+        path: /path/on/server/prometheus
+        server: SERVER_IP_ADDRESS
+```
+
+add Persistent Volume for the infrastructure storage
 
 - Apply the pv/pvc manifest files
 
 ```bash
 kubectl apply -f prometheus-persistent-volume-nfs.yaml
-kubectl --namespace monitoring apply -f prometheus-persistent-volume-claim.yaml
+kubectl --namespace infrastructure apply -f prometheus-persistent-volume-claim.yaml
 ```
 
 - Test the `persistent-volume`
@@ -29,13 +40,13 @@ kubectl get pv
 kubectl describe pv prometheus-persistent-volume-nfs
 
 kubectl get pvc
-kubectl --namespace monitoring describe pvc prometheus-persistent-volume-claim-nfs
+kubectl --namespace infrastructure describe pvc prometheus-persistent-volume-claim-nfs
 ```
 
 - Remove pv/pvc
 
 ```bash
-kubectl --namespace monitoring delete pvc prometheus-persistent-volume-claim-nfs
+kubectl --namespace infrastructure delete pvc prometheus-persistent-volume-claim-nfs
 kubectl delete pv prometheus-persistent-volume-nfs
 ```
 
@@ -58,23 +69,30 @@ server:
 ```bash
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm --namespace monitoring install prometheus prometheus-community/prometheus -f values.yaml
+helm --namespace infrastructure install prometheus prometheus-community/prometheus -f values.yaml
 ```
 
-### Port Forwarding - Testing
+- Update Chart Values
 
 ```bash
-kubectl port-forward --namespace monitoring --address 0.0.0.0 $(kubectl get pods --namespace monitoring --selector "app.kubernetes.io/name=prometheus" --output=name) 9090:9090
+helm --namespace infrastructure upgrade --reset-values prometheus prometheus-community/prometheus  -f values.yaml
+```
+
+### Port Forwarding - Only for Testing
+
+- dont use this in production, grafana need the local dns in the cluster to communicat [kubernetes local url](https://prometheus-server.infrastructure.svc.cluster.local:80)
+
+
+```bash
+kubectl port-forward --namespace infrastructure --address 0.0.0.0 $(kubectl get pods --namespace infrastructure --selector "app.kubernetes.io/name=prometheus" --output=name) 9090:9090
 ```
 
 ## Remove the Chart
 
 ```bash
-helm --namespace monitoring uninstall prometheus
-kubectl --namespace monitoring delete pvc prometheus-persistent-volume-claim-nfs
+helm --namespace infrastructure uninstall prometheus
+kubectl --namespace infrastructure delete pvc prometheus-persistent-volume-claim-nfs
 kubectl delete pv prometheus-persistent-volume-nfs
 ```
 
 ## Notes
-
-[kubernetes local url](https://prometheus-server.monitoring.svc.cluster.local:80)

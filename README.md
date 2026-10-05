@@ -11,11 +11,9 @@ see project objective in the `doc` Folder
 ## User Environment
 
 - Network NAS (nfs Storage)
-- Windows 11
-- WSL2\Ubuntu 24.04
+- Ubuntu 26.04 LTS
 - VScode
 - Git
-- Windows Terminal
 - Lens K8S IDE
 
 ## Security
@@ -34,8 +32,20 @@ list some of the tools
 
 Manual Install pip libraries
 
+### Using APT
+
+```bash
+sudo apt install pre-commit
+```
+### Using pip
+
 ```bash
 pip install pre-commit --break-system-packages
+```
+
+### Running pre-commit
+
+```bash
 pre-commit install
 pre-commit autoupdate
 pre-commit run --all-files --verbose
@@ -49,15 +59,36 @@ pre-commit run --all-files --verbose
 - Docker
 - Kubernetes
 - Helm
+- Terraform
+- Git
 
-### Install Tools
+## Prepare Environment
 
-[Install Cluster Tools Manual](./kubernetes/README.md)
+### Install Tools Script
 
-### Deploy Apps to Cluster
+- Build Minikube Script
 
-[Install PostgreSQL](./postgres/README.md)
+[Install Script](./script/README.md)
+
+### Deploy Applications to Cluster
+
+- Setup Kubernetes
+
+[Kubernetes](./kubernetes/README.md)\
+[Volume Persistent](./Kubernetes/PERSISTENT.md)
+
+- Deploy Applications
+
+[Install PostgreSQL](./postgres/README.md)\
+[Install Jenkins](./jenkins/README.md)\
+[Install Prometheus](./prometheus/README.md)\
+[Install Grafana](./grafana/README.md)
+[Install Traefik](./traefik/README.md)
+
+- Setup Infrastructure
+
+[Terraform](./terraform/README.md)
 
 ## Troubleshooting Issues
 
-[troubleshooting](./TROUBLESHOOTING.md)
+[Troubleshooting](./TROUBLESHOOTING.md)
