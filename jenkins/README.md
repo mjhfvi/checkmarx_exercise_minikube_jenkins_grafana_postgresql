@@ -57,6 +57,10 @@ admin:
   existingSecret: "jenkins-admin-credentials-secret"
 controller:
   usePodSecurityContext: false
+  JCasC:
+    configScripts:
+      jcasc-custom-config |
+
 ```
 
 ### Install the Chart

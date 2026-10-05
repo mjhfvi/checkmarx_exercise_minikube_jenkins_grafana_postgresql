@@ -1019,7 +1019,7 @@ controller:
                       remote: "https://github.com/mjhfvi/JenkinsExamples.git"
                       traits:
                       - "gitBranchDiscovery"
-      pipeline-job: |
+      pipeline-job-dsl-plugin: |
         jobs:
           - script: >
               pipelineJob('job-dsl-plugin') {
@@ -1039,6 +1039,67 @@ controller:
                   }
                 }
               }
+      pipeline-job-db-add-data: |
+        jobs:
+          - script: >
+              pipeline {
+                  agent {
+                      kubernetes {
+                          yaml '''
+              apiVersion: v1
+              kind: Pod
+              spec:
+                containers:
+                  - name: worker
+                    image: postgres:16
+                    command:
+                      - cat
+                    tty: true
+              '''
+                          defaultContainer 'worker'
+                      }
+                  }
+
+                  triggers {
+                      cron('H/5 * * * *')
+                  }
+
+                  // environment {
+                  //     // DB_HOST = credentials('db-host')
+                  //     // DB_NAME = credentials('db-name')
+                  // }
+
+                  stages {
+                      stage('Record timestamp') {
+                          steps {
+                                  sh '''
+                                      set -e
+
+                                      export PGPASSWORD=""
+
+                                      psql \
+                                        -h "postgresql.infrastructure.svc.cluster.local" \
+                                        -U "postgres" \
+                                        -d "TEMP" \
+                                        -c "CREATE TABLE IF NOT EXISTS job_runs (
+                                              id BIGSERIAL PRIMARY KEY,
+                                              run_timestamp TIMESTAMP NOT NULL
+                                            );"
+
+                                      psql \
+                                        -h "postgresql.infrastructure.svc.cluster.local" \
+                                        -U "postgres" \
+                                        -d "TEMP" \
+                                        -c "INSERT INTO job_runs (run_timestamp)
+                                            VALUES (CURRENT_TIMESTAMP);"
+
+                                  '''
+
+                          }
+                      }
+                  }
+              }
+
     # Allows adding to the top-level security JCasC section. For legacy purposes, by default, the chart includes apiToken configurations
     # -- Jenkins Config as Code security-section
     security:
